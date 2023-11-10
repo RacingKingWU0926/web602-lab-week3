@@ -1,15 +1,19 @@
 const pacMen = []; // This array holds all the pacmen
+
 const pacmanHeight = 100;  // this will be the same as width
 const pacmanWidth = 100;  // set a constant width for all pacman created
-const positionScaler = 200;
-const velocityScaler = 10;
-const timeout = 20;
+const positionScaler = 500;  // controls the starting position in pixel
+const velocityScaler = 10;  // larger = faster movement in position
+
+// This number controls the frames per second (fps).
+// For decent animation (>= 24 fps), use number smaller than 42.
+const refreshEvery = 41;  // refresh in millisecond (larger = laggier, smaller = smoothier);
 
 // This function returns an object with random values
 function setToRandom(scale) {
   return {
     x: Math.random() * scale,
-    y: Math.random() * scale,
+    y: Math.max(50, Math.random() * scale),  // so that it doesn't cover the "Start the Game" button
   };
 }
 
@@ -45,14 +49,13 @@ function update() {
     item.position.x += item.velocity.x;
     item.position.y += item.velocity.y;
 
-    item.newimg.style.left = item.position.x;
-    item.newimg.style.top = item.position.y;
+    item.pacImg.style.left = item.position.x;
+    item.pacImg.style.top = item.position.y;
   });
-  setTimeout(update, timeout);
+  setTimeout(update, refreshEvery);
 }
 
 function checkCollisions(item) {
-  // TODO: detect collision with all walls and make pacman bounce
   let rb = window.innerWidth - pacmanWidth;  // right bound
   let lb = window.innerHeight - pacmanHeight;  // lower bound
 
@@ -67,11 +70,12 @@ function checkCollisions(item) {
   }
 }
 
+// function to be called upon click event on the button `addBtn`
 function makeOne() {
   pacMen.push(makePac()); // add a new PacMan
 }
 
-//don't change this line
+// don't change this line
 if (typeof module !== 'undefined') {
   module.exports = { checkCollisions, update, pacMen };
 }
